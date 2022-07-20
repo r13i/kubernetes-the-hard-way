@@ -17,3 +17,8 @@ output "security_group_allow_external_id" {
   description = "ID of the external traffic security group"
   value       = aws_security_group.security_group_allow_external.id
 }
+
+output "access_key_name" {
+  description = "EC2 access key name"
+  value       = aws_key_pair.access_key.key_name
+}

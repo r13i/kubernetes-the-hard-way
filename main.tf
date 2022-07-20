@@ -79,4 +79,8 @@ resource "aws_security_group" "security_group_allow_external" {
   }
 }
 
+
+resource "aws_key_pair" "access_key" {
+  key_name   = "${var.project_name}-access-key"
+  public_key = var.ec2_access_key
 }
