@@ -22,3 +22,8 @@ output "access_key_name" {
   description = "EC2 access key name"
   value       = aws_key_pair.access_key.key_name
 }
+
+output "kubernetes_controllers_ip_addresses" {
+  description = "Private IP addresses of Kubernetes control plane"
+  value       = { for c in aws_instance.kubernetes_controllers : c.tags.Name => c.private_ip }
+}
