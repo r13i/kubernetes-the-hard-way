@@ -109,5 +109,6 @@ resource "aws_instance" "kubernetes_controllers" {
 
   tags = {
     "Name" = "controller-${each.value}"
+    "type" = "controller"
   }
 }
