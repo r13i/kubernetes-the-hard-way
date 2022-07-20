@@ -27,3 +27,8 @@ output "kubernetes_controllers_ip_addresses" {
   description = "Private IP addresses of Kubernetes control plane"
   value       = { for c in aws_instance.kubernetes_controllers : c.tags.Name => c.private_ip }
 }
+
+output "kubernetes_workers_ip_addresses" {
+  description = "Private IP addresses of Kubernetes workers"
+  value       = { for c in aws_instance.kubernetes_workers : c.tags.Name => c.private_ip }
+}

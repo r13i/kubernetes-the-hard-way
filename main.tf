@@ -112,3 +112,37 @@ resource "aws_instance" "kubernetes_controllers" {
     "type" = "controller"
   }
 }
+
+resource "aws_instance" "kubernetes_workers" {
+  for_each = toset(formatlist("%d", range(var.kubernetes_workers_count)))
+
+  ami           = var.ec2_ami_id
+  instance_type = "t3.micro"
+
+  private_ip = "10.240.0.2${each.value}"
+  subnet_id  = aws_subnet.subnet.id
+  vpc_security_group_ids = [
+    aws_security_group.security_group_allow_internal.id,
+    aws_security_group.security_group_allow_external.id,
+  ]
+
+  metadata_options {
+    http_endpoint          = "enabled"
+    instance_metadata_tags = "enabled"
+  }
+
+  associate_public_ip_address = false
+  key_name                    = aws_key_pair.access_key.key_name
+
+  root_block_device {
+    volume_type           = "gp2"
+    volume_size           = 20
+    delete_on_termination = true
+  }
+
+  tags = {
+    "Name"     = "worker-${each.value}"
+    "type"     = "worker"
+    "pod-cidr" = "10.200.${each.value}.0/24"
+  }
+}

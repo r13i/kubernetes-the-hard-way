@@ -39,3 +39,9 @@ variable "kubernetes_controllers_count" {
   type        = number
   default     = 3
 }
+
+variable "kubernetes_workers_count" {
+  description = "Number of worker instances"
+  type        = number
+  default     = 3
+}
