@@ -23,12 +23,27 @@ output "access_key_name" {
   value       = aws_key_pair.access_key.key_name
 }
 
-output "kubernetes_controllers_ip_addresses" {
+output "kubernetes_public_ip_address" {
+  description = "Public EIP address of the Kubernetes cluster"
+  value       = aws_eip.kubernetes_public_ip.public_ip
+}
+
+output "kubernetes_controllers_private_ip_addresses" {
   description = "Private IP addresses of Kubernetes control plane"
   value       = { for c in aws_instance.kubernetes_controllers : c.tags.Name => c.private_ip }
 }
 
-output "kubernetes_workers_ip_addresses" {
+output "kubernetes_controllers_public_ip_addresses" {
+  description = "Public IP addresses of Kubernetes control plane"
+  value       = { for c in aws_instance.kubernetes_controllers : c.tags.Name => c.public_ip }
+}
+
+output "kubernetes_workers_private_ip_addresses" {
   description = "Private IP addresses of Kubernetes workers"
   value       = { for c in aws_instance.kubernetes_workers : c.tags.Name => c.private_ip }
+}
+
+output "kubernetes_workers_public_ip_addresses" {
+  description = "Public IP addresses of Kubernetes workers"
+  value       = { for c in aws_instance.kubernetes_workers : c.tags.Name => c.public_ip }
 }

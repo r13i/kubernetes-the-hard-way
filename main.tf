@@ -14,10 +14,30 @@ resource "aws_vpc" "vpc" {
 }
 
 resource "aws_subnet" "subnet" {
-  vpc_id     = aws_vpc.vpc.id
-  cidr_block = var.private_cidr_range
+  vpc_id                  = aws_vpc.vpc.id
+  cidr_block              = var.private_cidr_range
+  map_public_ip_on_launch = true
+
+  depends_on = [aws_internet_gateway.internet_gateway]
 }
 
+resource "aws_internet_gateway" "internet_gateway" {
+  vpc_id = aws_vpc.vpc.id
+}
+
+resource "aws_route_table" "route_table" {
+  vpc_id = aws_vpc.vpc.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.internet_gateway.id
+  }
+}
+
+resource "aws_route_table_association" "route_table_association" {
+  subnet_id      = aws_subnet.subnet.id
+  route_table_id = aws_route_table.route_table.id
+}
 resource "aws_security_group" "security_group_allow_internal" {
   name        = "${var.project_name}-allow-internal"
   description = "Allow internal traffic"
@@ -98,7 +118,7 @@ resource "aws_instance" "kubernetes_controllers" {
     aws_security_group.security_group_allow_external.id,
   ]
 
-  associate_public_ip_address = false
+  associate_public_ip_address = true
   key_name                    = aws_key_pair.access_key.key_name
 
   root_block_device {
@@ -126,13 +146,13 @@ resource "aws_instance" "kubernetes_workers" {
     aws_security_group.security_group_allow_external.id,
   ]
 
+  associate_public_ip_address = true
+  key_name                    = aws_key_pair.access_key.key_name
+
   metadata_options {
     http_endpoint          = "enabled"
     instance_metadata_tags = "enabled"
   }
-
-  associate_public_ip_address = false
-  key_name                    = aws_key_pair.access_key.key_name
 
   root_block_device {
     volume_type           = "gp2"
