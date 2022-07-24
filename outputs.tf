@@ -47,3 +47,8 @@ output "kubernetes_workers_public_ip_addresses" {
   description = "Public IP addresses of Kubernetes workers"
   value       = { for c in aws_instance.kubernetes_workers : c.tags.Name => c.public_ip }
 }
+
+output "kubernetes_workers_count" {
+  description = "Count of the Kubernetes workers"
+  value       = var.kubernetes_workers_count
+}
