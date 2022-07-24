@@ -98,6 +98,9 @@ resource "aws_security_group" "security_group_allow_external" {
   }
 }
 
+resource "aws_eip" "kubernetes_public_ip" {
+  vpc = true
+}
 
 resource "aws_key_pair" "access_key" {
   key_name   = "${var.project_name}-access-key"
