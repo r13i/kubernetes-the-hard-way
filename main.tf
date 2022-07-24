@@ -44,6 +44,7 @@ resource "aws_security_group" "security_group_allow_internal" {
   vpc_id      = aws_vpc.vpc.id
 
   ingress {
+    description = "Allow TCP on all ports"
     protocol    = "tcp"
     from_port   = 0
     to_port     = 65535
@@ -51,6 +52,7 @@ resource "aws_security_group" "security_group_allow_internal" {
   }
 
   ingress {
+    description = "Allow UDP on all ports"
     protocol    = "udp"
     from_port   = 0
     to_port     = 65535
@@ -58,17 +60,11 @@ resource "aws_security_group" "security_group_allow_internal" {
   }
 
   ingress {
+    description = "Allow all ICMP traffic"
     protocol    = "icmp"
     from_port   = 0
     to_port     = 0
     cidr_blocks = [var.private_cidr_range, var.cluster_cidr_range]
-  }
-
-  egress {
-    protocol    = "-1" # All
-    from_port   = 0
-    to_port     = 0
-    cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
@@ -78,6 +74,7 @@ resource "aws_security_group" "security_group_allow_external" {
   vpc_id      = aws_vpc.vpc.id
 
   ingress {
+    description = "Allow SSH from any source"
     protocol    = "tcp"
     from_port   = 22
     to_port     = 22
@@ -85,6 +82,7 @@ resource "aws_security_group" "security_group_allow_external" {
   }
 
   ingress {
+    description = "Allow custom HTTPS from any source"
     protocol    = "tcp"
     from_port   = 6443
     to_port     = 6443
@@ -92,6 +90,7 @@ resource "aws_security_group" "security_group_allow_external" {
   }
 
   ingress {
+    description = "Allow all ICMP traffic from any source"
     protocol    = "icmp"
     from_port   = 0
     to_port     = 0
