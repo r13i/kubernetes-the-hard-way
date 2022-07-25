@@ -28,6 +28,8 @@ section of the Terraform AWS Provider documentation.
 
 ### Generate access key pair
 
+> Requirements: [ssh-keygen](https://en.wikipedia.org/wiki/Ssh-keygen)
+
 Following the instructions in the AWS documentation
 [Create a key pair using a third-party tool and import the public key to Amazon EC2](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/create-key-pairs.html#how-to-generate-your-own-key-and-import-it-to-aws),
 we generate a public/private key pair using `ssh-keygen`:
