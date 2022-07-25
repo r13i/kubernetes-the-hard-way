@@ -48,6 +48,11 @@ output "kubernetes_workers_public_ip_addresses" {
   value       = { for c in aws_instance.kubernetes_workers : c.tags.Name => c.public_ip }
 }
 
+output "kubernetes_controllers_count" {
+  description = "Count of the Kubernetes controllers"
+  value       = var.kubernetes_controllers_count
+}
+
 output "kubernetes_workers_count" {
   description = "Count of the Kubernetes workers"
   value       = var.kubernetes_workers_count
