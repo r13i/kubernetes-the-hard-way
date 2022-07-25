@@ -52,3 +52,16 @@ resource "aws_key_pair" "access_key" {
   public_key = "<content of generated file access-key.pub>"
 }
 ```
+
+### Create the infrastructure
+
+> Requirements: [Terraform CLI](https://learn.hashicorp.com/tutorials/terraform/install-cli)
+
+```bash
+# Login to you Terraform Cloud
+terraform login
+
+# Then apply the infrastructure to your account
+terraform apply
+```
+
