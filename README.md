@@ -67,3 +67,119 @@ terraform login
 terraform apply
 ```
 
+### Generate TLS certificates
+
+> Requirements: [Cloudflare's CFSSL](https://github.com/cloudflare/cfssl)
+
+After creating the infrastructure in the previous step [Create the infrastructure](#create-the-infrastructure), make
+sure to `cd` into `certificates/`, then run the following:
+
+1. **CA certificate**: Use the provided CSR config file to generate a CA certificate and private key.
+
+```bash
+cfssl gencert -initca ca-csr.json | cfssljson -bare ca
+```
+
+2. **Client certificates**: Generate a client certificate and private key for each Kubernetes component.
+
+  * The `admin` client certificate and private key:
+
+```bash
+cfssl gencert \
+  -ca=ca.pem \
+  -ca-key=ca-key.pem \
+  -config=ca-config.json \
+  -profile=kubernetes \
+  admin-csr.json | cfssljson -bare admin
+```
+
+  * The Kubelet client certificates and private keys:
+
+```bash
+# Examine the gen script then execute it
+./gen-kublet-client-cert.sh
+
+# Result
+worker-0.pem
+worker-0-key.pem
+# same for all workers 0, 1, ...
+```
+
+  * The `kube-controller-manager` client certificate and private key:
+
+```bash
+cfssl gencert \
+  -ca=ca.pem \
+  -ca-key=ca-key.pem \
+  -config=ca-config.json \
+  -profile=kubernetes \
+  kube-controller-manager-csr.json | cfssljson -bare kube-controller-manager
+```
+
+  * The `kube-proxy` client certificate and private key:
+
+```bash
+cfssl gencert \
+  -ca=ca.pem \
+  -ca-key=ca-key.pem \
+  -config=ca-config.json \
+  -profile=kubernetes \
+  kube-proxy-csr.json | cfssljson -bare kube-proxy
+```
+
+  * The `kube-scheduler` client certificate and private key:
+
+```bash
+cfssl gencert \
+  -ca=ca.pem \
+  -ca-key=ca-key.pem \
+  -config=ca-config.json \
+  -profile=kubernetes \
+  kube-scheduler-csr.json | cfssljson -bare kube-scheduler
+```
+
+3. **Kubernetes API server certificate**: The project's static IP (AWS Elastic IP) will be added to the list of SANs
+for the Kubernetes API server certificate to ensure the certificate is validated by remote clients.
+
+```bash
+# Examine the gen script then execute it
+./gen-kubernetes-api-server-cert.sh
+```
+
+4. **Service Account key pair**: The Kubernetes Controller Manager leverages a key pair to generate and sign
+service account tokens as described in the
+[managing service accounts](https://kubernetes.io/docs/reference/access-authn-authz/service-accounts-admin/)
+documentation.
+
+```bash
+cfssl gencert \
+  -ca=ca.pem \
+  -ca-key=ca-key.pem \
+  -config=ca-config.json \
+  -profile=kubernetes \
+  service-account-csr.json | cfssljson -bare service-account
+```
+
+#### Distribute the client and server certificates
+
+> Requirements: [scp](https://en.wikipedia.org/wiki/Secure_copy_protocol),
+[Terraform CLI](https://learn.hashicorp.com/tutorials/terraform/install-cli)
+
+We will use the access key `access-key.pem` created in the previous step
+[Generate access key pair](#generate-access-key-pair) to copy the certificates to the host instances via SSH.
+
+Make sure to `cd` into `certificates/`, then run the following:
+
+  * Certificates and private keys to the worker instances:
+
+```bash
+# Examine the copy script then execute it
+./copy-workers-certs.sh
+```
+
+  * Certificates and private keys to the controller instances:
+
+```bash
+# Examine the copy script then execute it
+./copy-controllers-certs.sh
+```
