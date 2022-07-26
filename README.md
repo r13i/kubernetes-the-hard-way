@@ -252,4 +252,45 @@ Make sure to `cd` into `configs/`, then run the following:
 ```bash
 # Examine the copy script then execute it
 ./copy-controllers-kubeconfig.sh
+
+### Generate the Data Encryption config and key
+
+We will generate the encryption key and config used by Kubernetes to encrypt secrets.
+
+Make sure to `cd` into `encryption/`, then run the following:
+
+```bash
+# Generate a key
+ENCRYPTION_KEY=$(head -c 32 /dev/urandom | base64)
+
+# Create a config file
+cat > encryption-config.yaml <<EOF
+kind: EncryptionConfig
+apiVersion: v1
+resources:
+  - resources:
+      - secrets
+    providers:
+      - aescbc:
+          keys:
+            - name: key1
+              secret: $ENCRYPTION_KEY
+      - identity: {}
+EOF
+```
+
+#### Distribute the encryption configuration file
+
+> Requirements: [scp](https://en.wikipedia.org/wiki/Secure_copy_protocol),
+[Terraform CLI](https://learn.hashicorp.com/tutorials/terraform/install-cli)
+
+We will use the access key `access-key.pem` created in the previous step
+[Generate access key pair](#generate-access-key-pair) to copy the encryption configuration file to the
+host instances via SSH.
+
+Make sure to `cd` into `encryption/`, then run the following:
+
+```bash
+# Examine the copy script then execute it
+./copy-controllers-encryption-config.sh
 ```
