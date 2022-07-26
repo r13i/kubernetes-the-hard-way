@@ -183,3 +183,73 @@ Make sure to `cd` into `certificates/`, then run the following:
 # Examine the copy script then execute it
 ./copy-controllers-certs.sh
 ```
+
+### Generate Kubernetes configuration files for authentication
+
+> Requirements: [kubectl](https://kubernetes.io/docs/tasks/tools/),
+[Terraform CLI](https://learn.hashicorp.com/tutorials/terraform/install-cli)
+
+We will generate the Kubernetes configuration files that enable the Kubernetes clients to locate and authenticate
+to the Kubernetes API servers.
+
+Make sure to `cd` into `configs/`, then run the following:
+
+  * The Kubelets configuration files:
+
+```bash
+# Examine the gen script then execute it
+./gen-kubelets-kubeconfig.sh
+```
+
+  * The `kube-proxy` configuration file:
+
+```bash
+# Examine the gen script then execute it
+./gen-kube-proxy-kubeconfig.sh
+```
+
+  * The `kube-controller-manager` configuration file:
+
+```bash
+# Examine the gen script then execute it
+./gen-kube-controller-manager-kubeconfig.sh
+```
+
+  * The `kube-scheduler` configuration file:
+
+```bash
+# Examine the gen script then execute it
+./gen-kube-scheduler-kubeconfig.sh
+```
+
+  * The `admin` configuration file:
+
+```bash
+# Examine the gen script then execute it
+./gen-admin-kubeconfig.sh
+```
+
+#### Distribute the Kubernetes configuration files
+
+> Requirements: [scp](https://en.wikipedia.org/wiki/Secure_copy_protocol),
+[Terraform CLI](https://learn.hashicorp.com/tutorials/terraform/install-cli)
+
+We will use the access key `access-key.pem` created in the previous step
+[Generate access key pair](#generate-access-key-pair) to copy the Kubernetes configuration files to the
+host instances via SSH.
+
+Make sure to `cd` into `configs/`, then run the following:
+
+  * Kubernetes configuration files to the worker instances:
+
+```bash
+# Examine the copy script then execute it
+./copy-workers-kubeconfig.sh
+```
+
+  * Kubernetes configuration files to the controller instances:
+
+```bash
+# Examine the copy script then execute it
+./copy-controllers-kubeconfig.sh
+```
