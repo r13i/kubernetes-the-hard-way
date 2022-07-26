@@ -174,14 +174,16 @@ Make sure to `cd` into `certificates/`, then run the following:
 
 ```bash
 # Examine the copy script then execute it
-./copy-workers-certs.sh
+# You can provide the path to your EC2 access key if it is different from access-key.pem at the project root directory
+./copy-workers-certs.sh [path-to-access-key.pem]
 ```
 
   * Certificates and private keys to the controller instances:
 
 ```bash
 # Examine the copy script then execute it
-./copy-controllers-certs.sh
+# You can provide the path to your EC2 access key if it is different from access-key.pem at the project root directory
+./copy-controllers-certs.sh [path-to-access-key.pem]
 ```
 
 ### Generate Kubernetes configuration files for authentication
@@ -244,14 +246,17 @@ Make sure to `cd` into `configs/`, then run the following:
 
 ```bash
 # Examine the copy script then execute it
-./copy-workers-kubeconfig.sh
+# You can provide the path to your EC2 access key if it is different from access-key.pem at the project root directory
+./copy-workers-kubeconfig.sh [path-to-access-key.pem]
 ```
 
   * Kubernetes configuration files to the controller instances:
 
 ```bash
 # Examine the copy script then execute it
-./copy-controllers-kubeconfig.sh
+# You can provide the path to your EC2 access key if it is different from access-key.pem at the project root directory
+./copy-controllers-kubeconfig.sh [path-to-access-key.pem]
+```
 
 ### Generate the Data Encryption config and key
 
@@ -292,5 +297,6 @@ Make sure to `cd` into `encryption/`, then run the following:
 
 ```bash
 # Examine the copy script then execute it
-./copy-controllers-encryption-config.sh
+# You can provide the path to your EC2 access key if it is different from access-key.pem at the project root directory
+./copy-controllers-encryption-config.sh [path-to-access-key.pem]
 ```
