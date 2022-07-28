@@ -71,6 +71,8 @@ terraform apply
 
 > Requirements: [Cloudflare's CFSSL](https://github.com/cloudflare/cfssl)
 
+> The following steps are condensed in the [bootstrap.sh](./certificates/bootstrap.sh) script for quick setup.
+
 After creating the infrastructure in the previous step [Create the infrastructure](#create-the-infrastructure), make
 sure to `cd` into `certificates/`, then run the following:
 
