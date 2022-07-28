@@ -60,9 +60,9 @@ resource "aws_security_group" "security_group_allow_internal" {
   }
 
   ingress {
-    description = "Allow all ICMP traffic"
+    description = "Allow ICMP ECHO (ping) traffic"
     protocol    = "icmp"
-    from_port   = 0
+    from_port   = 8
     to_port     = 0
     cidr_blocks = [var.private_cidr_range, var.cluster_cidr_range]
   }
@@ -98,9 +98,9 @@ resource "aws_security_group" "security_group_allow_external" {
   }
 
   ingress {
-    description = "Allow all ICMP traffic from any source"
+    description = "Allow ICMP ECHO (ping) traffic from any source"
     protocol    = "icmp"
-    from_port   = 0
+    from_port   = 8
     to_port     = 0
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -145,6 +145,11 @@ resource "aws_instance" "kubernetes_controllers" {
     delete_on_termination = true
   }
 
+  metadata_options {
+    http_endpoint          = "enabled"
+    instance_metadata_tags = "enabled"
+  }
+
   tags = {
     "Name" = "controller-${each.value}"
     "type" = "controller"
@@ -167,15 +172,15 @@ resource "aws_instance" "kubernetes_workers" {
   associate_public_ip_address = true
   key_name                    = aws_key_pair.access_key.key_name
 
-  metadata_options {
-    http_endpoint          = "enabled"
-    instance_metadata_tags = "enabled"
-  }
-
   root_block_device {
     volume_type           = "gp2"
     volume_size           = 20
     delete_on_termination = true
+  }
+
+  metadata_options {
+    http_endpoint          = "enabled"
+    instance_metadata_tags = "enabled"
   }
 
   tags = {
