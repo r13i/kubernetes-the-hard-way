@@ -12,7 +12,7 @@ KUBERNETES_SERVER_HOSTNAMES=kubernetes,kubernetes.default,kubernetes.default.svc
 echo -e "\nReading Kubernetes' public IP and workers' private IPs ..."
 
 KUBERNETES_PUBLIC_IP=$(terraform -chdir=./.. output --json | jq -r '.kubernetes_public_ip_address.value')
-CONTROLLERS_PRIVATE_IP_LIST=$(terraform -chdir=./.. output --json | jq -r '.kubernetes_controllers_ip_addresses.value | to_entries | map(.value) | join(",")')
+CONTROLLERS_PRIVATE_IP_LIST=$(terraform -chdir=./.. output --json | jq -r '.kubernetes_controllers_private_ip_addresses.value | to_entries | map(.value) | join(",")')
 
 echo "KUBERNETES_PUBLIC_IP=$KUBERNETES_PUBLIC_IP"
 echo "CONTROLLERS_PRIVATE_IP_LIST=$CONTROLLERS_PRIVATE_IP_LIST"
