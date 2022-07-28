@@ -66,6 +66,14 @@ resource "aws_security_group" "security_group_allow_internal" {
     to_port     = 0
     cidr_blocks = [var.private_cidr_range, var.cluster_cidr_range]
   }
+
+  egress {
+    description = "Allow all egress traffic"
+    protocol    = "-1"
+    from_port   = 0
+    to_port     = 0
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }
 
 resource "aws_security_group" "security_group_allow_external" {
@@ -92,6 +100,14 @@ resource "aws_security_group" "security_group_allow_external" {
   ingress {
     description = "Allow all ICMP traffic from any source"
     protocol    = "icmp"
+    from_port   = 0
+    to_port     = 0
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    description = "Allow all egress traffic"
+    protocol    = "-1"
     from_port   = 0
     to_port     = 0
     cidr_blocks = ["0.0.0.0/0"]
