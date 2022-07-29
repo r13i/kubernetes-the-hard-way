@@ -46,3 +46,9 @@ variable "kubernetes_workers_count" {
   type        = number
   default     = 3
 }
+
+variable "install_controller_user_data" {
+  description = "Install user data in controller EC2 instances"
+  type        = bool
+  default     = false
+}
