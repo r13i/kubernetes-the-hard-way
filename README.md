@@ -302,3 +302,33 @@ Make sure to `cd` into `encryption/`, then run the following:
 # You can provide the path to your EC2 access key if it is different from access-key.pem at the project root directory
 ./copy-controllers-encryption-config.sh [path-to-access-key.pem]
 ```
+
+### Bootstrapping the ETCD cluster
+
+From the root project directory, we will set the controller instances to restart with a
+[user-data script](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/user-data.html) that contains all the
+instructions to download, configure, and start ETCD on every controller instance.
+
+The user data file [controller-user-data.sh](./controller-user-data.sh) contains a first part that instructs
+[cloud-init](https://cloudinit.readthedocs.io/en/latest/topics/datasources/ec2.html)
+to run the script on restart (default is to run on initial launch). See this AWS tutorial for more details:
+- [How can I utilize user data to automatically run a script with every restart of my Amazon EC2 Linux instance?](https://aws.amazon.com/premiumsupport/knowledge-center/execute-user-data-ec2/)
+
+ETCD requires a mapping of hosts that are in the cluster `<controller-i> -> https://<host-i-private-ip>:2380`. The
+steps below show you how to generate this mapping and replace it in the user data script so that it's available
+to ETCD (the var `ETCD_INITIAL_CLUSTER` contains initially a placeholder value).
+
+To bootstrap the ETCD cluster, run the following:
+
+```bash
+# Generate a comma-separated list of ETCD cluster mappings <controller-i> -> https://<host-i-private-ip>:2380
+ETCD_INITIAL_CLUSTER=$(terraform output -json | jq -r '.kubernetes_controllers_private_ip_addresses.value | to_entries | map("\(.key)=https://\(.value):2380") | join(",")')
+
+# Replace in the user data script
+sed -i "s+placeholder+$ETCD_INITIAL_CLUSTER+" controller-user-data.sh
+## macOS users need to add a "" after -i
+sed -i "" "s+placeholder+$ETCD_INITIAL_CLUSTER+" controller-user-data.sh
+
+# Apply the infrastructure to ship the user data script to controller instances (without replacing the instances)
+terraform apply -var "install_controller_user_data=true"
+```
