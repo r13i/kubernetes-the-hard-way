@@ -332,3 +332,17 @@ sed -i "" "s+placeholder+$ETCD_INITIAL_CLUSTER+" controller-user-data.sh
 # Apply the infrastructure to ship the user data script to controller instances (without replacing the instances)
 terraform apply -var "install_controller_user_data=true"
 ```
+
+#### Verification
+
+```bash
+# SSH into one of the controller instances
+ssh -i access-key.pem ubuntu@<controller public address>
+
+# Run
+ETCDCTL_API=3 etcdctl member list \
+  --endpoints=https://127.0.0.1:2379 \
+  --cacert=/etc/etcd/ca.pem \
+  --cert=/etc/etcd/kubernetes.pem \
+  --key=/etc/etcd/kubernetes-key.pem
+```
