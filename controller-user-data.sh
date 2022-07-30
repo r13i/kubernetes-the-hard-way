@@ -28,11 +28,12 @@ echo -e "\n[$(date)] Installing and bootstrapping ETCD"
 ETCD_VER="v3.4.19"
 ETCD_NAME=$(curl -s http://169.254.169.254/latest/meta-data/tags/instance/Name)
 ETCD_PACKAGE_NAME="etcd-${ETCD_VER}-linux-amd64"
-ETCD_INITIAL_CLUSTER="placeholder"
+ETCD_INITIAL_CLUSTER="ETCD_INITIAL_CLUSTER_PLACEHOLDER"
+ETCD_DOWNLOAD_URL=https://github.com/etcd-io/etcd/releases/download
+
+INTERNAL_IP=$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4)
 
 HOME_UBUNTU="/home/ubuntu"
-DOWNLOAD_URL=https://github.com/etcd-io/etcd/releases/download
-INTERNAL_IP=$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4)
 
 echo "ETCD_VER=$ETCD_VER"
 echo "ETCD_NAME=$ETCD_NAME"
@@ -42,7 +43,7 @@ echo "ETCD_INITIAL_CLUSTER=$ETCD_INITIAL_CLUSTER"
 # Download and install ETCD to /usr/local/bin
 echo -e "\nDownloading ETCD ..."
 
-curl -sL ${DOWNLOAD_URL}/${ETCD_VER}/${ETCD_PACKAGE_NAME}.tar.gz -o /tmp/${ETCD_PACKAGE_NAME}.tar.gz
+curl -sL ${ETCD_DOWNLOAD_URL}/${ETCD_VER}/${ETCD_PACKAGE_NAME}.tar.gz -o /tmp/${ETCD_PACKAGE_NAME}.tar.gz
 tar xzf /tmp/${ETCD_PACKAGE_NAME}.tar.gz -C /tmp/
 mv /tmp/${ETCD_PACKAGE_NAME}/etcd* /usr/local/bin
 
