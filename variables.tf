@@ -16,6 +16,7 @@ variable "private_cidr_range" {
   default     = "10.240.0.0/24"
 }
 
+# Do not modify
 variable "cluster_cidr_range" {
   description = "Kubernetes cluster CIDR range"
   type        = string
