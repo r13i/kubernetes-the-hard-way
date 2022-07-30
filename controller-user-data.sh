@@ -18,7 +18,7 @@ Content-Transfer-Encoding: 7bit
 Content-Disposition: attachment; filename="userdata.txt"
 
 #!/bin/bash
-echo -e "\n[$(date)] controller-user-data"
+echo -e "\n[$(date)] Installing and bootstrapping ETCD"
 
 ETCD_VER="v3.4.19"
 ETCD_NAME=$(curl -s http://169.254.169.254/latest/meta-data/tags/instance/Name)
