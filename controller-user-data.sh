@@ -18,6 +18,11 @@ Content-Transfer-Encoding: 7bit
 Content-Disposition: attachment; filename="userdata.txt"
 
 #!/bin/bash
+
+set -o errexit   # abort on nonzero exitstatus
+set -o nounset   # abort on unbound variable
+set -o pipefail  # don't hide errors within pipes
+
 echo -e "\n[$(date)] Installing and bootstrapping ETCD"
 
 ETCD_VER="v3.4.19"
