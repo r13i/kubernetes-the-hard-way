@@ -55,7 +55,7 @@ echo -e "\nConfiguring ETCD ..."
 
 mkdir -p /etc/etcd /var/lib/etcd
 chmod 700 /var/lib/etcd
-mv "${HOME_UBUNTU}/ca.pem" "${HOME_UBUNTU}/kubernetes.pem" "${HOME_UBUNTU}/kubernetes-key.pem" /etc/etcd/
+cp "${HOME_UBUNTU}/ca.pem" "${HOME_UBUNTU}/kubernetes.pem" "${HOME_UBUNTU}/kubernetes-key.pem" /etc/etcd/
 
 cat <<EOF | tee /etc/systemd/system/etcd.service
 [Unit]
