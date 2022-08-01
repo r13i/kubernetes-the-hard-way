@@ -370,10 +370,13 @@ terraform apply -var "install_controller_user_data=true"
 # SSH into one of the controller instances
 ssh -i access-key.pem ubuntu@<controller public address>
 
-# Run
+# Verify ETCD is running
 ETCDCTL_API=3 etcdctl member list \
   --endpoints=https://127.0.0.1:2379 \
   --cacert=/etc/etcd/ca.pem \
   --cert=/etc/etcd/kubernetes.pem \
   --key=/etc/etcd/kubernetes-key.pem
+
+# Verify Kubernetes processes are running
+systemctl status kube-apiserver kube-controller-manager kube-scheduler
 ```
