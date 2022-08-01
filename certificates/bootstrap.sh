@@ -62,9 +62,11 @@ cfssl gencert \
 
 # Distribute the certificates
 ## Workers
+echo -e "\nDisributing workers certificates ..."
 ./copy-workers-certs.sh
 
 ## Controllers
+echo -e "\nDisributing controllers certificates ..."
 ./copy-controllers-certs.sh
 
 echo -e "\nAll done!"
