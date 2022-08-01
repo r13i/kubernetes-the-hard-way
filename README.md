@@ -202,35 +202,40 @@ Make sure to `cd` into `configs/`, then run the following:
 
 ```bash
 # Examine the gen script then execute it
-./gen-kubelets-kubeconfig.sh
+# You can provide the path to the 'certificates' directory if it is different from certificates/ at the project root directory
+./gen-kubelets-kubeconfig.sh [path-to-certificates-directory]
 ```
 
   * The `kube-proxy` configuration file:
 
 ```bash
 # Examine the gen script then execute it
-./gen-kube-proxy-kubeconfig.sh
+# You can provide the path to the 'certificates' directory if it is different from certificates/ at the project root directory
+./gen-kube-proxy-kubeconfig.sh [path-to-certificates-directory]
 ```
 
   * The `kube-controller-manager` configuration file:
 
 ```bash
 # Examine the gen script then execute it
-./gen-kube-controller-manager-kubeconfig.sh
+# You can provide the path to the 'certificates' directory if it is different from certificates/ at the project root directory
+./gen-kube-controller-manager-kubeconfig.sh [path-to-certificates-directory]
 ```
 
   * The `kube-scheduler` configuration file:
 
 ```bash
 # Examine the gen script then execute it
-./gen-kube-scheduler-kubeconfig.sh
+# You can provide the path to the 'certificates' directory if it is different from certificates/ at the project root directory
+./gen-kube-scheduler-kubeconfig.sh [path-to-certificates-directory]
 ```
 
   * The `admin` configuration file:
 
 ```bash
 # Examine the gen script then execute it
-./gen-admin-kubeconfig.sh
+# You can provide the path to the 'certificates' directory if it is different from certificates/ at the project root directory
+./gen-admin-kubeconfig.sh [path-to-certificates-directory]
 ```
 
 #### Distribute the Kubernetes configuration files
