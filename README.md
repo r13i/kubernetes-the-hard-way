@@ -193,6 +193,8 @@ Make sure to `cd` into `certificates/`, then run the following:
 > Requirements: [kubectl](https://kubernetes.io/docs/tasks/tools/),
 [Terraform CLI](https://learn.hashicorp.com/tutorials/terraform/install-cli)
 
+> The following steps are condensed in the [bootstrap.sh](./certificates/bootstrap.sh) script for quick setup.
+
 We will generate the Kubernetes configuration files that enable the Kubernetes clients to locate and authenticate
 to the Kubernetes API servers.
 
