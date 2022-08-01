@@ -14,15 +14,15 @@ echo -e "\nReading Kubernetes' public IP and workers' private IPs ..."
 KUBERNETES_PUBLIC_IP=$(terraform -chdir=./.. output --json | jq -r '.kubernetes_public_ip_address.value')
 CONTROLLERS_PRIVATE_IP_LIST=$(terraform -chdir=./.. output --json | jq -r '.kubernetes_controllers_private_ip_addresses.value | to_entries | map(.value) | join(",")')
 
-echo "KUBERNETES_PUBLIC_IP=$KUBERNETES_PUBLIC_IP"
-echo "CONTROLLERS_PRIVATE_IP_LIST=$CONTROLLERS_PRIVATE_IP_LIST"
+echo "KUBERNETES_PUBLIC_IP=${KUBERNETES_PUBLIC_IP}"
+echo "CONTROLLERS_PRIVATE_IP_LIST=${CONTROLLERS_PRIVATE_IP_LIST}"
 
-echo -e "\nGenerating certificate for Kubernetes API server ($KUBERNETES_PUBLIC_IP, $CONTROLLERS_PRIVATE_IP_LIST) ..."
+echo -e "\nGenerating certificate for Kubernetes API server (${KUBERNETES_PUBLIC_IP}, ${CONTROLLERS_PRIVATE_IP_LIST}) ..."
 cfssl gencert \
   -ca=ca.pem \
   -ca-key=ca-key.pem \
   -config=ca-config.json \
-  -hostname="$KUBERNETES_SERVER_PRIVATE_IP","$CONTROLLERS_PRIVATE_IP_LIST","$KUBERNETES_PUBLIC_IP","$KUBERNETES_SERVER_HOSTNAMES","127.0.0.1" \
+  -hostname=127.0.0.1,${KUBERNETES_SERVER_PRIVATE_IP},${CONTROLLERS_PRIVATE_IP_LIST},${KUBERNETES_PUBLIC_IP},${KUBERNETES_SERVER_HOSTNAMES} \
   -profile=kubernetes \
   kubernetes-csr.json | cfssljson -bare kubernetes
 
