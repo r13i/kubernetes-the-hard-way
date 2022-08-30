@@ -142,11 +142,11 @@ resource "aws_instance" "kubernetes_controllers" {
   user_data_replace_on_change = false
   user_data                   = var.install_controller_user_data ? "${file("${path.root}/controller-user-data.sh")}" : null
 
-  root_block_device {
-    volume_type           = "gp2"
-    volume_size           = 20
-    delete_on_termination = true
-  }
+  # root_block_device {
+  #   volume_type           = "gp2"
+  #   volume_size           = 20
+  #   delete_on_termination = true
+  # }
 
   metadata_options {
     http_endpoint          = "enabled"
@@ -175,11 +175,11 @@ resource "aws_instance" "kubernetes_workers" {
   associate_public_ip_address = true
   key_name                    = aws_key_pair.access_key.key_name
 
-  root_block_device {
-    volume_type           = "gp2"
-    volume_size           = 20
-    delete_on_termination = true
-  }
+  # root_block_device {
+  #   volume_type           = "gp2"
+  #   volume_size           = 20
+  #   delete_on_termination = true
+  # }
 
   metadata_options {
     http_endpoint          = "enabled"
