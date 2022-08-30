@@ -140,7 +140,7 @@ resource "aws_instance" "kubernetes_controllers" {
   key_name                    = aws_key_pair.access_key.key_name
 
   user_data_replace_on_change = false
-  user_data                   = var.install_controller_user_data ? "${file("controller-user-data.sh")}" : null
+  user_data                   = var.install_controller_user_data ? "${file("${path.root}/controller-user-data.sh")}" : null
 
   root_block_device {
     volume_type           = "gp2"
