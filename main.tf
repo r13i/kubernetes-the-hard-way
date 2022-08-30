@@ -118,6 +118,59 @@ resource "aws_eip" "kubernetes_public_ip" {
   vpc = true
 }
 
+resource "aws_lb" "controllers_load_balancer" {
+  name                             = var.project_name
+  internal                         = false
+  load_balancer_type               = "network"
+  enable_cross_zone_load_balancing = true
+
+  subnet_mapping {
+    subnet_id     = aws_subnet.subnet.id
+    allocation_id = aws_eip.kubernetes_public_ip.allocation_id
+  }
+}
+
+resource "aws_lb_listener" "controllers_listener" {
+  load_balancer_arn = aws_lb.controllers_load_balancer.arn
+
+  port     = 6443
+  protocol = "TCP"
+  # ssl_policy = "ELBSecurityPolicy-2016-08"
+
+  # There is only one certificate, but since there is a conditional in 'count', the certificate must be accessed with an index reference
+  # certificate_arn = aws_acm_certificate.kubernetes_certificate[0].arn
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.controllers_target_group.arn
+  }
+}
+
+resource "aws_lb_target_group" "controllers_target_group" {
+  name   = var.project_name
+  vpc_id = aws_vpc.vpc.id
+
+  protocol                      = "TCP"
+  port                          = 6443
+  target_type                   = "instance"
+  load_balancing_algorithm_type = "round_robin"
+
+  health_check {
+    path = "/healthz"
+    # port     = 6443
+    protocol = "HTTPS"
+    matcher  = 200
+  }
+}
+
+resource "aws_lb_target_group_attachment" "controllers_target_group_attachment" {
+  for_each = toset(formatlist("%d", range(var.kubernetes_controllers_count)))
+
+  target_group_arn = aws_lb_target_group.controllers_target_group.arn
+  target_id        = aws_instance.kubernetes_controllers[each.value].id
+  port             = 6443
+}
+
 resource "aws_key_pair" "access_key" {
   key_name   = "${var.project_name}-access-key"
   public_key = var.ec2_access_key
